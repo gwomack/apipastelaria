@@ -1,19 +1,19 @@
 <?php
 
-namespace Modules\Cliente\Database\Factories;
+namespace Modules\Client\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use Modules\Cliente\Models\Cliente;
+use Modules\Client\Models\Client;
 
-class ClienteFactory extends Factory
+class ClientFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Cliente::class;
+    protected $model = Client::class;
 
     /**
      * Define the model's default state.

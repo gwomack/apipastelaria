@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Cliente\Models;
+namespace Modules\Customer\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Cliente extends Model
+class Customer extends Model
 {
     use HasFactory;
 
@@ -51,13 +51,13 @@ class Cliente extends Model
         ];
     }
 
-    public function pedidos(): HasMany
-    {
-        return $this->hasMany(Pedido::class);
-    }
+    // public function pedidos(): HasMany
+    // {
+    //     return $this->hasMany(Pedido::class);
+    // }
 
-    public function produtos(): HasMany
-    {
-        return $this->hasMany(Produto::class);
-    }
+    // public function produtos(): HasMany
+    // {
+    //     return $this->hasMany(Produto::class);
+    // }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Cliente\Http\Requests\Api\V1;
+namespace Modules\Customer\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ClienteUpdateRequest extends FormRequest
+class CustomerStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,7 +20,6 @@ class ClienteUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'soft_delete' => ['required', 'string'],
             'nome' => ['required', 'string'],
             'email' => ['required', 'email'],
             'telefone' => ['required', 'string'],

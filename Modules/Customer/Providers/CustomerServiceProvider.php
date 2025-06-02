@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Cliente\Providers;
+namespace Modules\Customer\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Modules\Cliente\Providers\RouteServiceProvider;
+use Modules\Customer\Providers\RouteServiceProvider;
 
-class ClienteServiceProvider extends ServiceProvider
+class CustomerServiceProvider extends ServiceProvider
 {
     /**
      * Register services.

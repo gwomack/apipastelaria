@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Cliente\Http\Resources\Api\V1;
+namespace Modules\Customer\Http\Resources\Api\V1;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ClienteResource extends JsonResource
+class CustomerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -13,7 +13,6 @@ class ClienteResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'soft_delete' => $this->soft_delete,
             'id' => $this->id,
             'nome' => $this->nome,
             'email' => $this->email,

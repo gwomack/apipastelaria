@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Cliente\Providers;
+namespace Modules\Customer\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as BaseRouteServiceProvider;
 use Illuminate\Support\Facades\Route;
@@ -12,7 +12,7 @@ class RouteServiceProvider extends BaseRouteServiceProvider
         $this->routes(function () {
             Route::middleware('api')
                 ->prefix('api/v1')
-                ->namespace('Modules\Cliente\Http\Controllers\Api\V1')
+                ->namespace('Modules\Customer\Http\Controllers\Api\V1')
                 ->as('api.v1.')
                 ->group(__DIR__.'/../api.php');
         });
