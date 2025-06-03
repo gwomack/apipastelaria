@@ -17,7 +17,7 @@ class CustomerController extends Controller
 {
     public function index(Request $request): CustomerCollection
     {
-        $customers = Customer::all();
+        $customers = Customer::paginate(config('customer::config.per_page'));
 
         return new CustomerCollection($customers);
     }

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Modules\Customer\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Customer\Database\Factories\CustomerFactory;
@@ -12,13 +13,10 @@ use Modules\Customer\Database\Factories\CustomerFactory;
 class Customer extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
+    const CREATED_AT = 'data_cadastro';
+    const UPDATED_AT = null;
 
     /**
      * The attributes that are mass assignable.
@@ -36,7 +34,6 @@ class Customer extends Model
         'bairro',
         'cep',
         'data_cadastro',
-        'data_atualizacao',
     ];
 
     /**

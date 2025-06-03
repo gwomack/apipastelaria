@@ -35,6 +35,10 @@ expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
 
+expect()->extend('toBeSoftDeleted', function () {
+    return $this->value->trashed();
+});
+
 /*
 |--------------------------------------------------------------------------
 | Functions

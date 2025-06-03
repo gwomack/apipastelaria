@@ -12,57 +12,136 @@ use Illuminate\Support\Carbon;
 use function Pest\Laravel\post;
 use function Pest\Laravel\delete;
 use Modules\Customer\Models\Customer;
-use Illuminate\Foundation\Testing\WithFaker;
-use function Pest\Laravel\assertModelMissing;
-
-uses(WithFaker::class);
+use Modules\Customer\Http\Requests\Api\V1\CustomerStoreRequest;
+use Modules\Customer\Http\Controllers\Api\V1\CustomerController;
+use Modules\Customer\Http\Requests\Api\V1\CustomerUpdateRequest;
 
 it('index behaves as expected', function (): void {
-    $customers = Customer::factory()->count(3)->create();
+    Customer::factory()->count(10)->create();
 
-    $response = get(route('customers.index'));
+    $response = get(route('api.customers.index'));
 
     $response->assertOk();
-    $response->assertJsonStructure([]);
+    $response->assertJsonStructure([
+        'data' => [
+            '*' => [
+                'id',
+                'nome',
+                'email',
+                'telefone',
+                'data_nascimento',
+                'endereco',
+                'complemento',
+            ],
+        ],
+    ]);
 });
 
 it('store uses form request validation')
     ->assertActionUsesFormRequest(
-        \Modules\Customer\Http\Controllers\Api\V1\CustomerController::class,
+        CustomerController::class,
         'store',
-        \Modules\Customer\Http\Requests\Api\V1\CustomerStoreRequest::class
+        CustomerStoreRequest::class
     );
 
-it('store saves', function (): void {
-    $customer = Customer::factory()->make();
+it('validates store appropriately', function (): void {
+    //
+    // checks for required fields
+    //
 
-    $response = login()->post(route('customers.store'), [
-        'nome'             => $customer->nome,
-        'email'            => $customer->email,
-        'telefone'         => $customer->telefone,
-        'data_nascimento'  => $customer->data_nascimento,
-        'endereco'         => $customer->endereco,
-        'complemento'      => $customer->complemento,
-        'bairro'           => $customer->bairro,
-        'cep'              => $customer->cep,
-        'data_cadastro'    => $customer->data_cadastro,
+    $response = login()->post(route('api.customers.store'), [
+        'telefone'         => fake()->e164PhoneNumber,
+        'data_nascimento'  => fake()->date,
+        'endereco'         => fake()->address,
+        'complemento'      => fake()->secondaryAddress,
+        'bairro'           => fake()->word,
+        'cep'              => fake()->postcode,
+    ], [
+        'Accept' => 'application/json',
     ]);
 
-    // $response->dump();
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors([
+        'nome',
+        'email',
+    ]);
 
-    $customers = Customer::query()
-        ->where('nome', $customer->nome)
-        ->where('email', $customer->email)
-        ->where('telefone', $customer->telefone)
-        ->where('data_nascimento', $customer->data_nascimento->format('Y-m-d'))
-        ->where('endereco', $customer->endereco)
-        ->where('complemento', $customer->complemento)
-        ->where('bairro', $customer->bairro)
-        ->where('cep', $customer->cep)
-        ->where('data_cadastro', $customer->data_cadastro->format('Y-m-d H:i:s'))
-        ->get();
+    //
+    // checks for unique fields
+    //
 
-    expect($customers)->toHaveCount(1);
+    $email = fake()->safeEmail;
+
+    $customer = Customer::factory()->create([
+        'email' => $email,
+    ]);
+
+    $response = login()->post(route('api.customers.store'), [
+        'nome'             => fake()->firstName,
+        'email'            => $email,
+    ], [
+        'Accept' => 'application/json',
+    ]);
+
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors([
+        'email',
+    ]);
+
+    //
+    // checks for max length
+    //
+
+    $response = login()->post(route('api.customers.store'), [
+        'nome'             => fake()->firstName . str_repeat('a', 256),
+        'email'            => fake()->safeEmail . str_repeat('a', 256),
+        'telefone'         => fake()->e164PhoneNumber . str_repeat('a', 256),
+        'endereco'         => fake()->address . str_repeat('a', 256),
+        'complemento'      => fake()->secondaryAddress . str_repeat('a', 256),
+        'bairro'           => fake()->word . str_repeat('a', 256),
+        'cep'              => fake()->postcode . str_repeat('a', 256),
+    ], [
+        'Accept' => 'application/json',
+    ]);
+
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors([
+        'nome',
+        'email',
+        'telefone',
+        'endereco',
+        'complemento',
+        'bairro',
+        'cep',
+    ]);
+
+});
+
+it('stores a customer', function (): void {
+
+    $email = fake()->safeEmail;
+
+    // check if the customer already exists
+    $customer = Customer::where('email', $email)->get();
+    expect($customer)->toHaveCount(0);
+
+    // create a customer
+    $response = login()->post(route('api.customers.store'), [
+        'nome'             => fake()->firstName,
+        'email'            => $email,
+        'telefone'         => fake()->e164PhoneNumber,
+        'data_nascimento'  => fake()->date,
+        'endereco'         => fake()->address,
+        'complemento'      => fake()->secondaryAddress,
+        'bairro'           => fake()->word,
+        'cep'              => fake()->postcode,
+    ], [
+        'Accept' => 'application/json',
+    ]);
+
+    $customer = Customer::where('email', $email)->get();
+    expect($customer)->toHaveCount(1);
+    expect($customer->first()->data_cadastro)->toBeInstanceOf(Carbon::class);
 
     $response->assertCreated();
     $response->assertJsonStructure([]);
@@ -71,7 +150,7 @@ it('store saves', function (): void {
 it('show behaves as expected', function (): void {
     $customer = Customer::factory()->create();
 
-    $response = get(route('customers.show', $customer));
+    $response = get(route('api.customers.show', $customer));
 
     $response->assertOk();
     $response->assertJsonStructure([]);
@@ -79,9 +158,9 @@ it('show behaves as expected', function (): void {
 
 it('update uses form request validation')
     ->assertActionUsesFormRequest(
-        \Modules\Customer\Http\Controllers\Api\V1\CustomerController::class,
+        CustomerController::class,
         'update',
-        \Modules\Customer\Http\Requests\Api\V1\CustomerUpdateRequest::class
+        CustomerUpdateRequest::class
     );
 
 it('update behaves as expected', function (): void {
@@ -90,13 +169,12 @@ it('update behaves as expected', function (): void {
     $email            = fake()->safeEmail;
     $telefone         = fake()->e164PhoneNumber;
     $data_nascimento  = Carbon::parse(fake()->date);
-    $endereco         = fake()->word;
-    $complemento      = fake()->word;
+    $endereco         = fake()->address;
+    $complemento      = fake()->secondaryAddress;
     $bairro           = fake()->word;
-    $cep              = fake()->word;
-    $data_cadastro    = Carbon::parse(fake()->dateTime);
+    $cep              = fake()->postcode;
 
-    $response = login()->put(route('customers.update', $customer), [
+    $response = login()->put(route('api.customers.update', $customer), [
         'nome'             => $nome,
         'email'            => $email,
         'telefone'         => $telefone,
@@ -105,7 +183,6 @@ it('update behaves as expected', function (): void {
         'complemento'      => $complemento,
         'bairro'           => $bairro,
         'cep'              => $cep,
-        'data_cadastro'    => $data_cadastro->toDateTimeString(),
     ]);
 
     $customer->refresh();
@@ -121,15 +198,14 @@ it('update behaves as expected', function (): void {
     expect($complemento)->toEqual($customer->complemento);
     expect($bairro)->toEqual($customer->bairro);
     expect($cep)->toEqual($customer->cep);
-    expect($data_cadastro->toDateTimeString())->toEqual($customer->data_cadastro);
 });
 
-it('destroy deletes and responds with', function (): void {
+it('destroy deletes and responds with no content', function (): void {
     $customer = Customer::factory()->create();
 
-    $response = login()->delete(route('customers.destroy', $customer));
+    $response = login()->delete(route('api.customers.destroy', $customer));
 
     $response->assertNoContent();
 
-    assertModelMissing($customer);
+    expect($customer->refresh())->toBeSoftDeleted();
 });

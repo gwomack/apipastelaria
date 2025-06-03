@@ -22,15 +22,15 @@ class CustomerStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome'             => ['required', 'string'],
-            'email'            => ['required', 'email'],
-            'telefone'         => ['string'],
-            'data_nascimento'  => ['date'],
-            'endereco'         => ['string'],
-            'complemento'      => ['string'],
-            'bairro'           => ['string'],
-            'cep'              => ['string'],
-            'data_cadastro'    => [],
+            'nome'             => ['required', 'max:255'],
+            'email'            => ['required', 'email', 'unique:customers,email', 'max:255'],
+            'telefone'         => ['max:255', 'nullable'],
+            'data_nascimento'  => ['date', 'date_format:Y-m-d', 'nullable'],
+            'endereco'         => ['max:255', 'nullable'],
+            'complemento'      => ['max:255', 'nullable'],
+            'bairro'           => ['max:255', 'nullable'],
+            'cep'              => ['max:255', 'nullable'],
+            'data_cadastro'    => ['date', 'date_format:Y-m-d H:i:s', 'nullable'],
         ];
     }
 }
