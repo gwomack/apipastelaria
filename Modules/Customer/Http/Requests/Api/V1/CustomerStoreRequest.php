@@ -24,14 +24,13 @@ class CustomerStoreRequest extends FormRequest
         return [
             'nome'             => ['required', 'string'],
             'email'            => ['required', 'email'],
-            'telefone'         => ['required', 'string'],
-            'data_nascimento'  => ['required', 'date'],
-            'endereco'         => ['required', 'string'],
-            'complemento'      => ['required', 'string'],
-            'bairro'           => ['required', 'string'],
-            'cep'              => ['required', 'string'],
-            'data_cadastro'    => ['required'],
-            'data_atualizacao' => ['required'],
+            'telefone'         => ['string'],
+            'data_nascimento'  => ['date'],
+            'endereco'         => ['string'],
+            'complemento'      => ['string'],
+            'bairro'           => ['string'],
+            'cep'              => ['string'],
+            'data_cadastro'    => [],
         ];
     }
 }

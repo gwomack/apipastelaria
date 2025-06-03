@@ -4,9 +4,10 @@ declare(strict_types = 1);
 
 namespace Modules\Customer\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Customer\Database\Factories\CustomerFactory;
 
 class Customer extends Model
 {
@@ -48,9 +49,18 @@ class Customer extends Model
         return [
             'id'               => 'integer',
             'data_nascimento'  => 'date',
-            'data_cadastro'    => 'timestamp',
-            'data_atualizacao' => 'timestamp',
+            'data_cadastro'    => 'datetime',
         ];
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    protected static function newFactory()
+    {
+        return CustomerFactory::new();
     }
 
     // public function pedidos(): HasMany

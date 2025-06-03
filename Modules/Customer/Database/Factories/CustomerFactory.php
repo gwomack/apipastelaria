@@ -22,16 +22,15 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
-            'nome'             => fake()->word(),
+            'nome'             => fake()->name(),
             'email'            => fake()->safeEmail(),
-            'telefone'         => fake()->word(),
+            'telefone'         => fake()->phoneNumber(),
             'data_nascimento'  => fake()->date(),
-            'endereco'         => fake()->word(),
-            'complemento'      => fake()->word(),
+            'endereco'         => fake()->address(),
+            'complemento'      => fake()->secondaryAddress(),
             'bairro'           => fake()->word(),
-            'cep'              => fake()->word(),
+            'cep'              => fake()->postcode(),
             'data_cadastro'    => fake()->dateTime(),
-            'data_atualizacao' => fake()->dateTime(),
         ];
     }
 }
