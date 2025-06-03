@@ -14,7 +14,6 @@ return new class () extends Migration
     public function up(): void
     {
         Schema::create('customers', function (Blueprint $table) {
-            $table->string('soft_delete');
             $table->id();
             $table->string('nome')->index();
             $table->string('email')->unique()->index();
@@ -25,6 +24,7 @@ return new class () extends Migration
             $table->string('bairro')->nullable();
             $table->string('cep')->nullable();
             $table->timestamp('data_cadastro')->useCurrent();
+            $table->softDeletes();
         });
     }
 
