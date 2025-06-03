@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Livewire\Auth;
 
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +24,7 @@ class ConfirmPassword extends Component
         ]);
 
         if (! Auth::guard('web')->validate([
-            'email' => Auth::user()->email,
+            'email'    => Auth::user()->email,
             'password' => $this->password,
         ])) {
             throw ValidationException::withMessages([

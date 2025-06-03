@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types = 1);
+
+use App\Models\User;
+use Illuminate\Testing\TestResponse;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -13,7 +18,7 @@
 
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Feature');
+    ->in('Feature', '../Modules/*/Tests/Feature');
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +35,10 @@ expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
 
+expect()->extend('toBeSoftDeleted', function () {
+    return $this->value->trashed();
+});
+
 /*
 |--------------------------------------------------------------------------
 | Functions
@@ -41,7 +50,7 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function login($user = null)
 {
-    // ..
+    return test()->actingAs($user ?? User::factory()->create());
 }
