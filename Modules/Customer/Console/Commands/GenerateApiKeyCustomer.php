@@ -13,7 +13,7 @@ class GenerateApiKeyCustomer extends Command
      * @var string
      */
     protected $signature = 'customer:generate-api-key
-        {customer : The ID of the customer}
+        {customer? : The ID of the customer (optional)}
     ';
 
     /**
@@ -21,7 +21,7 @@ class GenerateApiKeyCustomer extends Command
      *
      * @var string
      */
-    protected $description = 'Generate API key for customer';
+    protected $description = 'Generate API key for customer. if customer not found, create a new one';
 
     /**
      * Execute the console command.
@@ -30,9 +30,15 @@ class GenerateApiKeyCustomer extends Command
     {
         $id = $this->argument('customer');
 
-        $customer = Customer::findOrFail($id);
+        $customer = $id ? Customer::find($id) : null;
 
-        $token = $customer->createToken('api-key');
+        if (!$customer) {
+            $customer = Customer::factory()->create();
+        }
+
+        $token = $customer->createToken(
+            config('customer.token_name')
+        );
 
         $this->info('API key generated successfully');
         $this->info('API key: ' . $token->plainTextToken);
