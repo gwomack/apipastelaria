@@ -25,11 +25,6 @@ return Application::configure(basePath: dirname(__DIR__))
                     return response()->json([
                         'message' => 'Resource not found',
                     ], 404);
-                } else {
-                    Log::error($e);
-                    return response()->json([
-                        'message' => 'Internal server error',
-                    ], 500);
                 }
             }
         });

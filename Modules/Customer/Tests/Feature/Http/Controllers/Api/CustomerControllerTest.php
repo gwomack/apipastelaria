@@ -19,7 +19,7 @@ use Modules\Customer\Http\Requests\Api\V1\CustomerUpdateRequest;
 it('index behaves as expected', function (): void {
     Customer::factory()->count(10)->create();
 
-    $response = get(route('api.customers.index'));
+    $response = login()->get(route('api.customers.index'));
 
     $response->assertOk();
     $response->assertJsonStructure([
@@ -150,7 +150,9 @@ it('stores a customer', function (): void {
 it('show behaves as expected', function (): void {
     $customer = Customer::factory()->create();
 
-    $response = get(route('api.customers.show', $customer));
+    $response = login()->get(route('api.customers.show', $customer), [
+        'Accept' => 'application/json',
+    ]);
 
     $response->assertOk();
     $response->assertJsonStructure([]);
@@ -183,6 +185,8 @@ it('update behaves as expected', function (): void {
         'complemento'      => $complemento,
         'bairro'           => $bairro,
         'cep'              => $cep,
+    ], [
+        'Accept' => 'application/json',
     ]);
 
     $customer->refresh();
@@ -203,7 +207,9 @@ it('update behaves as expected', function (): void {
 it('destroy deletes and responds with no content', function (): void {
     $customer = Customer::factory()->create();
 
-    $response = login()->delete(route('api.customers.destroy', $customer));
+    $response = login()->delete(route('api.customers.destroy', $customer), [
+        'Accept' => 'application/json',
+    ]);
 
     $response->assertNoContent();
 
