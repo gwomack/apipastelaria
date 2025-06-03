@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Modules\Customer\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -44,9 +46,9 @@ class Customer extends Model
     protected function casts(): array
     {
         return [
-            'id' => 'integer',
-            'data_nascimento' => 'date',
-            'data_cadastro' => 'timestamp',
+            'id'               => 'integer',
+            'data_nascimento'  => 'date',
+            'data_cadastro'    => 'timestamp',
             'data_atualizacao' => 'timestamp',
         ];
     }

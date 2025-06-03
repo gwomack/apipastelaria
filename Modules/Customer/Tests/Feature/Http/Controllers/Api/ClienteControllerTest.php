@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Tests\Feature\Http\Controllers\Api;
 
 use Illuminate\Support\Carbon;
 use Modules\Cliente\Models\Cliente;
+
 use function Pest\Faker\fake;
 use function Pest\Laravel\assertModelMissing;
 use function Pest\Laravel\delete;
@@ -20,7 +23,6 @@ test('index behaves as expected', function (): void {
     $response->assertJsonStructure([]);
 });
 
-
 test('store uses form request validation')
     ->assertActionUsesFormRequest(
         \Modules\Cliente\Http\Controllers\Api\V1\ClienteController::class,
@@ -29,29 +31,29 @@ test('store uses form request validation')
     );
 
 test('store saves', function (): void {
-    $soft_delete = fake()->word();
-    $nome = fake()->word();
-    $email = fake()->safeEmail();
-    $telefone = fake()->word();
-    $data_nascimento = Carbon::parse(fake()->date());
-    $endereco = fake()->word();
-    $complemento = fake()->word();
-    $bairro = fake()->word();
-    $cep = fake()->word();
-    $data_cadastro = Carbon::parse(fake()->dateTime());
+    $soft_delete      = fake()->word();
+    $nome             = fake()->word();
+    $email            = fake()->safeEmail();
+    $telefone         = fake()->word();
+    $data_nascimento  = Carbon::parse(fake()->date());
+    $endereco         = fake()->word();
+    $complemento      = fake()->word();
+    $bairro           = fake()->word();
+    $cep              = fake()->word();
+    $data_cadastro    = Carbon::parse(fake()->dateTime());
     $data_atualizacao = Carbon::parse(fake()->dateTime());
 
     $response = post(route('clientes.store'), [
-        'soft_delete' => $soft_delete,
-        'nome' => $nome,
-        'email' => $email,
-        'telefone' => $telefone,
-        'data_nascimento' => $data_nascimento->toDateString(),
-        'endereco' => $endereco,
-        'complemento' => $complemento,
-        'bairro' => $bairro,
-        'cep' => $cep,
-        'data_cadastro' => $data_cadastro->toDateTimeString(),
+        'soft_delete'      => $soft_delete,
+        'nome'             => $nome,
+        'email'            => $email,
+        'telefone'         => $telefone,
+        'data_nascimento'  => $data_nascimento->toDateString(),
+        'endereco'         => $endereco,
+        'complemento'      => $complemento,
+        'bairro'           => $bairro,
+        'cep'              => $cep,
+        'data_cadastro'    => $data_cadastro->toDateTimeString(),
         'data_atualizacao' => $data_atualizacao->toDateTimeString(),
     ]);
 
@@ -75,7 +77,6 @@ test('store saves', function (): void {
     $response->assertJsonStructure([]);
 });
 
-
 test('show behaves as expected', function (): void {
     $cliente = Cliente::factory()->create();
 
@@ -85,7 +86,6 @@ test('show behaves as expected', function (): void {
     $response->assertJsonStructure([]);
 });
 
-
 test('update uses form request validation')
     ->assertActionUsesFormRequest(
         \Modules\Cliente\Http\Controllers\Api\V1\ClienteController::class,
@@ -94,30 +94,30 @@ test('update uses form request validation')
     );
 
 test('update behaves as expected', function (): void {
-    $cliente = Cliente::factory()->create();
-    $soft_delete = fake()->word();
-    $nome = fake()->word();
-    $email = fake()->safeEmail();
-    $telefone = fake()->word();
-    $data_nascimento = Carbon::parse(fake()->date());
-    $endereco = fake()->word();
-    $complemento = fake()->word();
-    $bairro = fake()->word();
-    $cep = fake()->word();
-    $data_cadastro = Carbon::parse(fake()->dateTime());
+    $cliente          = Cliente::factory()->create();
+    $soft_delete      = fake()->word();
+    $nome             = fake()->word();
+    $email            = fake()->safeEmail();
+    $telefone         = fake()->word();
+    $data_nascimento  = Carbon::parse(fake()->date());
+    $endereco         = fake()->word();
+    $complemento      = fake()->word();
+    $bairro           = fake()->word();
+    $cep              = fake()->word();
+    $data_cadastro    = Carbon::parse(fake()->dateTime());
     $data_atualizacao = Carbon::parse(fake()->dateTime());
 
     $response = put(route('clientes.update', $cliente), [
-        'soft_delete' => $soft_delete,
-        'nome' => $nome,
-        'email' => $email,
-        'telefone' => $telefone,
-        'data_nascimento' => $data_nascimento->toDateString(),
-        'endereco' => $endereco,
-        'complemento' => $complemento,
-        'bairro' => $bairro,
-        'cep' => $cep,
-        'data_cadastro' => $data_cadastro->toDateTimeString(),
+        'soft_delete'      => $soft_delete,
+        'nome'             => $nome,
+        'email'            => $email,
+        'telefone'         => $telefone,
+        'data_nascimento'  => $data_nascimento->toDateString(),
+        'endereco'         => $endereco,
+        'complemento'      => $complemento,
+        'bairro'           => $bairro,
+        'cep'              => $cep,
+        'data_cadastro'    => $data_cadastro->toDateTimeString(),
         'data_atualizacao' => $data_atualizacao->toDateTimeString(),
     ]);
 
@@ -138,7 +138,6 @@ test('update behaves as expected', function (): void {
     expect($data_cadastro->timestamp)->toEqual($cliente->data_cadastro);
     expect($data_atualizacao->timestamp)->toEqual($cliente->data_atualizacao);
 });
-
 
 test('destroy deletes and responds with', function (): void {
     $cliente = Cliente::factory()->create();

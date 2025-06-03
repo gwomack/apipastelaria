@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Modules\Customer\Http\Resources\Api\V1;
 
 use Illuminate\Http\Request;

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Modules\Customer\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use Modules\Customer\Models\Customer;
 
 class CustomerFactory extends Factory
@@ -21,15 +22,15 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
-            'nome' => fake()->word(),
-            'email' => fake()->safeEmail(),
-            'telefone' => fake()->word(),
-            'data_nascimento' => fake()->date(),
-            'endereco' => fake()->word(),
-            'complemento' => fake()->word(),
-            'bairro' => fake()->word(),
-            'cep' => fake()->word(),
-            'data_cadastro' => fake()->dateTime(),
+            'nome'             => fake()->word(),
+            'email'            => fake()->safeEmail(),
+            'telefone'         => fake()->word(),
+            'data_nascimento'  => fake()->date(),
+            'endereco'         => fake()->word(),
+            'complemento'      => fake()->word(),
+            'bairro'           => fake()->word(),
+            'cep'              => fake()->word(),
+            'data_cadastro'    => fake()->dateTime(),
             'data_atualizacao' => fake()->dateTime(),
         ];
     }

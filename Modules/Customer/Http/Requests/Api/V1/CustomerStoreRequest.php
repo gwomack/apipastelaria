@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Modules\Customer\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -20,15 +22,15 @@ class CustomerStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => ['required', 'string'],
-            'email' => ['required', 'email'],
-            'telefone' => ['required', 'string'],
-            'data_nascimento' => ['required', 'date'],
-            'endereco' => ['required', 'string'],
-            'complemento' => ['required', 'string'],
-            'bairro' => ['required', 'string'],
-            'cep' => ['required', 'string'],
-            'data_cadastro' => ['required'],
+            'nome'             => ['required', 'string'],
+            'email'            => ['required', 'email'],
+            'telefone'         => ['required', 'string'],
+            'data_nascimento'  => ['required', 'date'],
+            'endereco'         => ['required', 'string'],
+            'complemento'      => ['required', 'string'],
+            'bairro'           => ['required', 'string'],
+            'cep'              => ['required', 'string'],
+            'data_cadastro'    => ['required'],
             'data_atualizacao' => ['required'],
         ];
     }

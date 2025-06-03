@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Modules\Customer\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as BaseRouteServiceProvider;
@@ -14,7 +16,7 @@ class RouteServiceProvider extends BaseRouteServiceProvider
                 ->prefix('api/v1')
                 ->namespace('Modules\Customer\Http\Controllers\Api\V1')
                 ->as('api.v1.')
-                ->group(__DIR__.'/../api.php');
+                ->group(__DIR__ . '/../api.php');
         });
     }
 }
