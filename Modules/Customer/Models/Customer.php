@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Modules\Customer\Models;
 
+use Artisan;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -51,6 +52,19 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
             'data_nascimento'  => 'date',
             'data_cadastro'    => 'datetime',
         ];
+    }
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // create token when customer is created
+        static::created(function ($model) {
+            $model->token = $model->createToken(config('customer.token_name'))->plainTextToken;
+        });
     }
 
     /**
