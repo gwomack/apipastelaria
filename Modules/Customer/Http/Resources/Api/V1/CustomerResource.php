@@ -14,7 +14,7 @@ class CustomerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $data = [
             'id'               => $this->getKey(),
             'nome'             => $this->nome,
             'email'            => $this->email,
@@ -26,5 +26,11 @@ class CustomerResource extends JsonResource
             'cep'              => $this->cep,
             'data_cadastro'    => $this->data_cadastro->format('Y-m-d H:i:s'),
         ];
+
+        if ($this->token) {
+            $data['token'] = $this->token;
+        }
+
+        return $data;
     }
 }

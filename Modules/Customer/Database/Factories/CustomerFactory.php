@@ -30,7 +30,6 @@ class CustomerFactory extends Factory
             'complemento'      => fake()->secondaryAddress(),
             'bairro'           => fake()->word(),
             'cep'              => fake()->postcode(),
-            'data_cadastro'    => fake()->dateTime(),
         ];
     }
 }
