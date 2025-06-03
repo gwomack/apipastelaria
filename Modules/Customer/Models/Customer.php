@@ -4,16 +4,22 @@ declare(strict_types = 1);
 
 namespace Modules\Customer\Models;
 
+use Artisan;
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Customer\Database\Factories\CustomerFactory;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 
-class Customer extends Model
+class Customer extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use HasFactory;
-    use SoftDeletes;
+    use Authenticatable, Authorizable, HasFactory, SoftDeletes, HasApiTokens, Notifiable;
 
     const CREATED_AT = 'data_cadastro';
     const UPDATED_AT = null;
@@ -24,7 +30,6 @@ class Customer extends Model
      * @var array
      */
     protected $fillable = [
-        'soft_delete',
         'nome',
         'email',
         'telefone',
@@ -33,7 +38,6 @@ class Customer extends Model
         'complemento',
         'bairro',
         'cep',
-        'data_cadastro',
     ];
 
     /**
@@ -48,6 +52,19 @@ class Customer extends Model
             'data_nascimento'  => 'date',
             'data_cadastro'    => 'datetime',
         ];
+    }
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // create token when customer is created
+        static::created(function ($model) {
+            $model->token = $model->createToken(config('customer.token_name'))->plainTextToken;
+        });
     }
 
     /**

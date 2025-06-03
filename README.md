@@ -55,6 +55,34 @@ Este é um projeto de API Laravel 12, containerizado com Docker e utilizando Pos
    ./vendor/bin/sail artisan migrate
    ```
 
+## Gerando uma API Key para um Cliente
+
+Este projeto possui um comando Artisan para gerar uma API key para um cliente. Caso o ID do cliente não seja informado ou não exista, um novo cliente será criado automaticamente.
+
+**Comando:**
+```sh
+./vendor/bin/sail artisan customer:generate-api-key {customer_id}
+```
+- `customer_id` (opcional): ID do cliente existente. Se omitido ou não encontrado, um novo cliente será criado.
+
+**Exemplos:**
+
+Gerar API key para um cliente existente (ID 5):
+```sh
+./vendor/bin/sail artisan customer:generate-api-key 5
+```
+
+Gerar API key para um novo cliente:
+```sh
+./vendor/bin/sail artisan customer:generate-api-key
+```
+
+**Saída esperada:**
+```
+API key generated successfully
+API key: <sua-api-key-gerada>
+```
+
 ## Executando os Testes
 
 Para rodar a suíte de testes:
