@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 use App\Models\User;
 use Illuminate\Testing\TestResponse;
+use Modules\Customer\Models\Customer;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,5 +53,5 @@ expect()->extend('toBeSoftDeleted', function () {
 
 function login($user = null)
 {
-    return test()->actingAs($user ?? User::factory()->create());
+    return test()->actingAs($user ?? Customer::factory()->create());
 }
