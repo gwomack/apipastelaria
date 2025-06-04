@@ -50,7 +50,7 @@ expect()->extend('toBeSoftDeleted', function () {
 |
 */
 
-function login($user = null)
+function login($user = null, $guard = 'web')
 {
-    return test()->actingAs($user ?? User::factory()->create());
+    return test()->actingAs($user ?? User::factory()->create(), $guard);
 }
