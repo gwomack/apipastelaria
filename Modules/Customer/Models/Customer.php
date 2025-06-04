@@ -4,25 +4,29 @@ declare(strict_types = 1);
 
 namespace Modules\Customer\Models;
 
-use Artisan;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Customer\Database\Factories\CustomerFactory;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Modules\Customer\Database\Factories\CustomerFactory;
 
 class Customer extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable, HasFactory, SoftDeletes, HasApiTokens, Notifiable;
+    use Authenticatable;
+    use Authorizable;
+    use HasFactory;
+    use SoftDeletes;
+    use HasApiTokens;
+    use Notifiable;
 
-    const CREATED_AT = 'data_cadastro';
-    const UPDATED_AT = null;
+    public const CREATED_AT = 'data_cadastro';
+    public const UPDATED_AT = null;
 
     /**
      * The attributes that are mass assignable.
@@ -48,9 +52,9 @@ class Customer extends Model implements AuthenticatableContract, AuthorizableCon
     protected function casts(): array
     {
         return [
-            'id'               => 'integer',
-            'data_nascimento'  => 'date',
-            'data_cadastro'    => 'datetime',
+            'id'              => 'integer',
+            'data_nascimento' => 'date',
+            'data_cadastro'   => 'datetime',
         ];
     }
 

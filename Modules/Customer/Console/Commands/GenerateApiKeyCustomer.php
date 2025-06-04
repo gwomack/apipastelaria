@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Modules\Customer\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -32,7 +34,7 @@ class GenerateApiKeyCustomer extends Command
 
         $customer = $id ? Customer::find($id) : null;
 
-        if (!$customer) {
+        if (! $customer) {
             $customer = Customer::factory()->create();
         }
 
