@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 12.16.0.
+ * Generated for Laravel 12.17.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -23624,6 +23624,27 @@ namespace Illuminate\Testing {
             }
     }
 
+namespace Illuminate\Routing {
+    /**
+     * 
+     *
+     */
+    class Route {
+        /**
+         * 
+         *
+         * @see \Livewire\Features\SupportLazyLoading\SupportLazyLoading::registerRouteMacro()
+         * @param mixed $enabled
+         * @static 
+         */
+        public static function lazy($enabled = true)
+        {
+            return \Illuminate\Routing\Route::lazy($enabled);
+        }
+
+            }
+    }
+
 namespace Illuminate\View {
     /**
      * 
@@ -23761,27 +23782,6 @@ namespace Illuminate\View {
         public static function response($callback)
         {
             return \Illuminate\View\View::response($callback);
-        }
-
-            }
-    }
-
-namespace Illuminate\Routing {
-    /**
-     * 
-     *
-     */
-    class Route {
-        /**
-         * 
-         *
-         * @see \Livewire\Features\SupportLazyLoading\SupportLazyLoading::registerRouteMacro()
-         * @param mixed $enabled
-         * @static 
-         */
-        public static function lazy($enabled = true)
-        {
-            return \Illuminate\Routing\Route::lazy($enabled);
         }
 
             }
@@ -27745,6 +27745,19 @@ namespace  {
         }
 
         /**
+         * Add descending "reorder" clause to the query.
+         *
+         * @param \Closure|\Illuminate\Database\Query\Builder|\Illuminate\Contracts\Database\Query\Expression|string|null $column
+         * @return \Illuminate\Database\Eloquent\Builder<static> 
+         * @static 
+         */
+        public static function reorderDesc($column)
+        {
+            /** @var \Illuminate\Database\Query\Builder $instance */
+            return $instance->reorderDesc($column);
+        }
+
+        /**
          * Add a union statement to the query.
          *
          * @param \Closure|\Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder<*> $query
@@ -28750,6 +28763,11 @@ namespace  {
 }
 
 
+namespace Facades\Livewire\Features\SupportFileUploads {
+    /**
+     * @mixin \Livewire\Features\SupportFileUploads\GenerateSignedUploadUrl     */
+    class GenerateSignedUploadUrl extends \Livewire\Features\SupportFileUploads\GenerateSignedUploadUrl {}
+}
 
 
 
