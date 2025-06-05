@@ -5,15 +5,15 @@ declare(strict_types = 1);
 namespace Tests\Feature\Http\Controllers\Api;
 
 use Illuminate\Support\Carbon;
-
+use function Pest\Laravel\post;
+use function Pest\Laravel\delete;
+use Modules\Customer\Models\Customer;
+use Illuminate\Support\Facades\Exceptions;
+use Modules\Customer\Http\Requests\Api\V1\CustomerStoreRequest;
 use Modules\Customer\Http\Controllers\Api\V1\CustomerController;
 use Modules\Customer\Http\Requests\Api\V1\CustomerStoreRequest;
 use Modules\Customer\Http\Requests\Api\V1\CustomerUpdateRequest;
-use Modules\Customer\Models\Customer;
-
-use function Pest\Faker\fake;
-
-uses()->group('customer');
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 it('index behaves as expected', function (): void {
     Customer::factory()->count(10)->create();
@@ -48,15 +48,13 @@ it('validates store appropriately', function (): void {
     // checks for required fields
     //
 
-    $response = login()->post(route('api.customers.store'), [
-        'telefone'        => fake()->e164PhoneNumber,
-        'data_nascimento' => fake()->date,
-        'endereco'        => fake()->address,
-        'complemento'     => fake()->secondaryAddress,
-        'bairro'          => fake()->word,
-        'cep'             => fake()->postcode,
-    ], [
-        'Accept' => 'application/json',
+    $response = login()->postJson(route('api.customers.store'), [
+        'telefone'         => fake()->e164PhoneNumber,
+        'data_nascimento'  => fake()->date,
+        'endereco'         => fake()->address,
+        'complemento'      => fake()->secondaryAddress,
+        'bairro'           => fake()->word,
+        'cep'              => fake()->postcode,
     ]);
 
     $response->assertStatus(422);
@@ -75,11 +73,9 @@ it('validates store appropriately', function (): void {
         'email' => $email,
     ]);
 
-    $response = login()->post(route('api.customers.store'), [
-        'nome'  => fake()->firstName,
-        'email' => $email,
-    ], [
-        'Accept' => 'application/json',
+    $response = login()->postJson(route('api.customers.store'), [
+        'nome'             => fake()->firstName,
+        'email'            => $email,
     ]);
 
     $response->assertStatus(422);
@@ -91,16 +87,14 @@ it('validates store appropriately', function (): void {
     // checks for max length
     //
 
-    $response = login()->post(route('api.customers.store'), [
-        'nome'        => fake()->firstName . str_repeat('a', 256),
-        'email'       => fake()->safeEmail . str_repeat('a', 256),
-        'telefone'    => fake()->e164PhoneNumber . str_repeat('a', 256),
-        'endereco'    => fake()->address . str_repeat('a', 256),
-        'complemento' => fake()->secondaryAddress . str_repeat('a', 256),
-        'bairro'      => fake()->word . str_repeat('a', 256),
-        'cep'         => fake()->postcode . str_repeat('a', 256),
-    ], [
-        'Accept' => 'application/json',
+    $response = login()->postJson(route('api.customers.store'), [
+        'nome'             => fake()->firstName . str_repeat('a', 256),
+        'email'            => fake()->safeEmail . str_repeat('a', 256),
+        'telefone'         => fake()->e164PhoneNumber . str_repeat('a', 256),
+        'endereco'         => fake()->address . str_repeat('a', 256),
+        'complemento'      => fake()->secondaryAddress . str_repeat('a', 256),
+        'bairro'           => fake()->word . str_repeat('a', 256),
+        'cep'              => fake()->postcode . str_repeat('a', 256),
     ]);
 
     $response->assertStatus(422);
@@ -123,17 +117,15 @@ it('stores a customer', function (): void {
     expect($customer)->toHaveCount(0);
 
     // create a customer
-    $response = login()->post(route('api.customers.store'), [
-        'nome'            => fake()->firstName,
-        'email'           => $email,
-        'telefone'        => fake()->e164PhoneNumber,
-        'data_nascimento' => fake()->date,
-        'endereco'        => fake()->address,
-        'complemento'     => fake()->secondaryAddress,
-        'bairro'          => fake()->word,
-        'cep'             => fake()->postcode,
-    ], [
-        'Accept' => 'application/json',
+    $response = login()->postJson(route('api.customers.store'), [
+        'nome'             => fake()->firstName,
+        'email'            => $email,
+        'telefone'         => fake()->e164PhoneNumber,
+        'data_nascimento'  => fake()->date,
+        'endereco'         => fake()->address,
+        'complemento'      => fake()->secondaryAddress,
+        'bairro'           => fake()->word,
+        'cep'              => fake()->postcode,
     ]);
 
     $customer = Customer::where('email', $email)->get();
@@ -147,9 +139,7 @@ it('stores a customer', function (): void {
 it('show behaves as expected', function (): void {
     $customer = Customer::factory()->create();
 
-    $response = login()->get(route('api.customers.show', $customer), [
-        'Accept' => 'application/json',
-    ]);
+    $response = login()->getJson(route('api.customers.show', $customer));
 
     $response->assertOk();
     $response->assertJsonStructure([]);
@@ -173,17 +163,15 @@ it('update behaves as expected', function (): void {
     $bairro          = fake()->word;
     $cep             = fake()->postcode;
 
-    $response = login()->put(route('api.customers.update', $customer), [
-        'nome'            => $nome,
-        'email'           => $email,
-        'telefone'        => $telefone,
-        'data_nascimento' => $data_nascimento->toDateString(),
-        'endereco'        => $endereco,
-        'complemento'     => $complemento,
-        'bairro'          => $bairro,
-        'cep'             => $cep,
-    ], [
-        'Accept' => 'application/json',
+    $response = login()->putJson(route('api.customers.update', $customer), [
+        'nome'             => $nome,
+        'email'            => $email,
+        'telefone'         => $telefone,
+        'data_nascimento'  => $data_nascimento->toDateString(),
+        'endereco'         => $endereco,
+        'complemento'      => $complemento,
+        'bairro'           => $bairro,
+        'cep'              => $cep,
     ]);
 
     $customer->refresh();
@@ -204,11 +192,24 @@ it('update behaves as expected', function (): void {
 it('destroy deletes and responds with no content', function (): void {
     $customer = Customer::factory()->create();
 
-    $response = login()->delete(route('api.customers.destroy', $customer), [
-        'Accept' => 'application/json',
-    ]);
+    $response = login()->deleteJson(route('api.customers.destroy', $customer));
 
     $response->assertNoContent();
 
     expect($customer->refresh())->toBeSoftDeleted();
+});
+
+it('throws exception when customer not found', function () {
+    Exceptions::fake();
+    $notFoundId = 1000;
+
+    $response = login()->getJson(route('api.customers.show', $notFoundId));
+
+    $response->assertStatus(404);
+    Exceptions::assertNotReported(NotFoundHttpException::class);
+
+    $response = login()->putJson(route('api.customers.update', $notFoundId));
+
+    $response->assertStatus(404);
+    Exceptions::assertNotReported(NotFoundHttpException::class);
 });
