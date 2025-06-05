@@ -13,6 +13,8 @@ use Modules\Customer\Models\Customer;
 
 use function Pest\Faker\fake;
 
+uses()->group('customer');
+
 it('index behaves as expected', function (): void {
     Customer::factory()->count(10)->create();
 

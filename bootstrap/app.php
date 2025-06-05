@@ -20,14 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (Throwable $e) {
             if (request()->expectsJson()) {
-                match ($e) {
-                    NotFoundHttpException::class => response()->json([
+                if ($e instanceof NotFoundHttpException) {
+                    return response()->json([
                         'message' => 'Resource not found',
-                    ], 404),
-                    Throwable::class => response()->json([
-                        'message' => 'Internal server error',
-                    ], 500),
-                };
+                    ], 404);
+                }
             }
         });
     })->create();
