@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace Modules\Product\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 use Modules\Product\Models\ProductCategory;
 
 class ProductCategoryFactory extends Factory
@@ -22,7 +21,7 @@ class ProductCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'nome'      => fake()->word(),
+            'nome' => fake()->word(),
             'descricao' => fake()->word(),
         ];
     }

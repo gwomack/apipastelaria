@@ -1,17 +1,16 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace Modules\Product\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Modules\Product\Http\Requests\Api\ProductStoreRequest;
-use Modules\Product\Http\Requests\Api\ProductUpdateRequest;
-use Modules\Product\Http\Resources\Api\ProductCollection;
-use Modules\Product\Http\Resources\Api\ProductResource;
 use Modules\Product\Models\Product;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use Modules\Product\Http\Resources\Api\V1\ProductResource;
+use Modules\Product\Http\Resources\Api\V1\ProductCollection;
+use Modules\Product\Http\Requests\Api\V1\ProductStoreRequest;
+use Modules\Product\Http\Requests\Api\V1\ProductUpdateRequest;
 
 class ProductController extends Controller
 {
@@ -24,7 +23,12 @@ class ProductController extends Controller
 
     public function store(ProductStoreRequest $request): ProductResource
     {
-        $product = Product::create($request->validated());
+        $data = $request->safe()->except(['foto']);
+
+        $foto = $request->file('foto');
+        $data['foto'] = $foto->store('products', 'public');
+
+        $product = Product::create($data);
 
         return new ProductResource($product);
     }
@@ -36,7 +40,21 @@ class ProductController extends Controller
 
     public function update(ProductUpdateRequest $request, Product $product): ProductResource
     {
-        $product->update($request->validated());
+        $data = $request->safe()->except(['foto']);
+
+        if ($request->hasFile('foto')) {
+            // Delete the old photo if it exists
+            if ($product->foto && Storage::disk('public')->exists($product->foto)) {
+                Storage::disk('public')->delete($product->foto);
+            }
+
+            $foto = $request->file('foto');
+            $data['foto'] = $foto->store('products', 'public');
+        }
+
+        $product->update($data);
+
+        $product->refresh()->load('productCategory');
 
         return new ProductResource($product);
     }
